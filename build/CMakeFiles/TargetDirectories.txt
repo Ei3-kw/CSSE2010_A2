@@ -1,0 +1,6 @@
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/flash.dir
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/edit_cache.dir
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/rebuild_cache.dir
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/strip.dir
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/hex.dir
+/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles/assignment2.dir

@@ -68,7 +68,7 @@ void start_screen(void) {
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("Diamond Miners"));
 	move_terminal_cursor(10,12);
-	printf_P(PSTR("CSSE2010/7201 project by <your name here>"));
+	printf_P(PSTR("CSSE2010/7201 project by <Jiayi WANG>"));
 	
 	// Output the static start screen and wait for a push button 
 	// to be pushed or a serial input of 's'
