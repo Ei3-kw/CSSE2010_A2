@@ -6,6 +6,9 @@
  * Author: Luke Kamols
  */ 
 
+#include <avr/pgmspace.h>
+#include <stdio.h>
+
 #include "game.h"
 #include "display.h"
 
@@ -42,8 +45,8 @@ uint8_t player_y;
 uint8_t facing_x;
 uint8_t facing_y;
 uint8_t facing_visible;
-
-uint8_t piece_at_c;
+uint8_t cheat_on = 0;
+uint8_t diamond_collected = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -150,15 +153,58 @@ void move_player(uint8_t dx, uint8_t dy) {
 	if (in_bounds(player_x + dx, player_y + dy)) {
 		if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
 			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE) {
-			update_square_colour(player_x, player_y, 0);
-			// update_square_colour(facing_x, facing_y, 0);
+			
+			playing_field[player_y][player_y] = EMPTY_SQUARE;
+			update_square_colour(player_x, player_y, EMPTY_SQUARE);
+
 			player_x += dx;
 			player_y += dy;
+			collecting_diamonds(player_x, player_y);
+			playing_field[player_y][player_y] = PLAYER;
 			update_square_colour(player_x, player_y, PLAYER);
+			
+			update_square_colour(facing_x, facing_y, 
+				playing_field[facing_x][facing_y]);
 		}
-		facing_x = player_x + dx;
-		facing_y = player_y + dy;
-		flash_facing();
+	}
+	facing_x = player_x + dx;
+	facing_y = player_y + dy;
+	flash_facing();
+}
+
+void inspecting(void) {
+	if (get_object_at(facing_x, facing_y) == BREAKABLE) {
+		playing_field[facing_x][facing_y] = INSPECTED_BREAKABLE;
+		update_square_colour(facing_x, facing_y, INSPECTED_BREAKABLE);
+	}
+	cheating();
+}
+
+void cheat_mode(void) {
+	clear_terminal();
+	cheat_on = !cheat_on;
+	if (cheat_on) {
+		move_terminal_cursor(10,10);
+		printf_P(PSTR("Cheat on"));
+	} else {
+		move_terminal_cursor(10,10);
+		printf_P(PSTR("Cheat off"));
+	}
+}
+
+void cheating(void) {
+	if (cheat_on) {
+		if (get_object_at(facing_x, facing_y) == INSPECTED_BREAKABLE) {
+			playing_field[facing_x][facing_y] = EMPTY_SQUARE;
+			update_square_colour(facing_x, facing_y, EMPTY_SQUARE);
+			discoverable_dfs(facing_x, facing_y);
+		}
+	}
+}
+
+void collecting_diamonds(uint8_t x, uint8_t y) {
+	if (get_object_at(x, y) == DIAMOND) {
+		diamond_collected += 1;
 	}
 }
 

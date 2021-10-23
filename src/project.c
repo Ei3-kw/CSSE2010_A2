@@ -148,6 +148,14 @@ void play_game(void) {
 			move_player(0, -1);
 		}
 
+		if (serial_input == 'e' || serial_input == 'E') {
+			inspecting();
+		}
+
+		if (serial_input == 'c' || serial_input == 'C') {
+			cheat_mode();
+		}
+
 		current_time = get_current_time();
 		if(current_time >= last_flash_time + 500) {
 			// 500ms (0.5 second) has passed since the last time we

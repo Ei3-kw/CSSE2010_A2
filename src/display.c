@@ -63,12 +63,14 @@ void update_square_colour(uint8_t x, uint8_t y, uint8_t object) {
 		colour = MATRIX_COLOUR_PLAYER;
 	} else if (object == FACING) {
 		colour = MATRIX_COLOUR_FACING;
-	} else if (object == BREAKABLE || object == UNBREAKABLE) {
+	} else if (object == UNBREAKABLE || object == BREAKABLE) {
 		colour = MATRIX_COLOUR_WALL;
 	} else if (object == DIAMOND) {
 		colour = MATRIX_COLOUR_DIAMOND;
 	} else if (object == UNDISCOVERED) {
 		colour = MATRIX_COLOUR_UNDISCOVERED;
+	} else if (object == INSPECTED_BREAKABLE) {
+		colour = MATRIX_COLOUR_BREAKABLE_WALL;
 	} else {
 		// anything unexpected (or empty) will be black
 		colour = MATRIX_COLOUR_EMPTY;
