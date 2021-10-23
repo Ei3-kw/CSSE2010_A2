@@ -69,6 +69,8 @@ void start_screen(void) {
 	printf_P(PSTR("Diamond Miners"));
 	move_terminal_cursor(10,12);
 	printf_P(PSTR("CSSE2010/7201 project by <Jiayi WANG>"));
+	move_terminal_cursor(10,13);
+	printf_P(PSTR("Student num: 46822394"));
 	
 	// Output the static start screen and wait for a push button 
 	// to be pushed or a serial input of 's'
@@ -122,13 +124,30 @@ void play_game(void) {
 		// We need to check if any button has been pushed, this will be
 		// NO_BUTTON_PUSHED if no button has been pushed
 		btn = button_pushed();
-		
-		if (btn == BUTTON0_PUSHED) {
-			// If button 0 is pushed, move right, i.e increase x by 1 and leave
-			// y the same
-			move_player(1, 0);
+
+		char serial_input = -1;
+		if (serial_input_available()) {
+			serial_input = fgetc(stdin);
 		}
-	
+		
+		if (btn == BUTTON0_PUSHED || serial_input == 'd' || serial_input == 'D') {
+			// If button 0 is pushed, or 'd' is pressed, move right, 
+			// i.e increase x by 1 and leave y the same
+			move_player(1, 0);
+		} else if (btn == BUTTON1_PUSHED || serial_input == 'a' || serial_input == 'A') {
+			// If button 1 is pushed, or 'a' is pressed, move left, 
+			// i.e decrease x by 1 and leave y the same
+			move_player(-1, 0);
+		} else if (btn == BUTTON2_PUSHED || serial_input == 'w' || serial_input == 'W') {
+			// If button 2 is pushed, or 'w' is pressed, move up, 
+			// i.e increase y by 1 and leave x the same
+			move_player(0, 1);
+		} else if (btn == BUTTON3_PUSHED || serial_input == 's' || serial_input == 'S') {
+			// If button 3 is pushed, or 's' is pressed, move right, 
+			// i.e decrease y by 1 and leave x the same
+			move_player(0, -1);
+		}
+
 		current_time = get_current_time();
 		if(current_time >= last_flash_time + 500) {
 			// 500ms (0.5 second) has passed since the last time we

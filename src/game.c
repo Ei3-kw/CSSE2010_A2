@@ -43,6 +43,8 @@ uint8_t facing_x;
 uint8_t facing_y;
 uint8_t facing_visible;
 
+uint8_t piece_at_c;
+
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
 void initialise_game_display(void);
@@ -138,7 +140,6 @@ void flash_facing(void) {
 // check the header file game.h for a description of what this function should do
 // it contains a few extra hints
 void move_player(uint8_t dx, uint8_t dy) {
-	// YOUR CODE HERE
 	// suggestions for implementation:
 	// 1: remove the display of the player at the current location
 	//    (and replace it with whatever else is at that location)
@@ -146,6 +147,19 @@ void move_player(uint8_t dx, uint8_t dy) {
 	// 3: if the player can move, update the positional knowledge of the player, 
 	//    this will include variables player_x and player_y
 	// 4: display the player at the new location
+	if (in_bounds(player_x + dx, player_y + dy)) {
+		if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
+			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE) {
+			update_square_colour(player_x, player_y, 0);
+			// update_square_colour(facing_x, facing_y, 0);
+			player_x += dx;
+			player_y += dy;
+			update_square_colour(player_x, player_y, PLAYER);
+		}
+		facing_x = player_x + dx;
+		facing_y = player_y + dy;
+		flash_facing();
+	}
 }
 
 uint8_t is_game_over(void) {
