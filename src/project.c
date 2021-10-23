@@ -118,9 +118,14 @@ void play_game(void) {
 	
 	last_flash_time = get_current_time();
 	
+	move_terminal_cursor(10,10);
+	printf_P(PSTR("Cheat off"));
+	move_terminal_cursor(10,12);
+	printf_P(PSTR("Diamonds: 0"));
+		
 	// We play the game until it's over
 	while(!is_game_over()) {
-		
+
 		// We need to check if any button has been pushed, this will be
 		// NO_BUTTON_PUSHED if no button has been pushed
 		btn = button_pushed();

@@ -11,6 +11,7 @@
 
 #include "game.h"
 #include "display.h"
+#include "terminalio.h"
 
 #define PLAYER_START_X  0;
 #define PLAYER_START_Y  0;
@@ -52,6 +53,17 @@ uint8_t diamond_collected = 0;
 void discoverable_dfs(uint8_t x, uint8_t y);
 void initialise_game_display(void);
 void initialise_game_state(void);
+void initialise_game(void);
+uint8_t in_bounds(uint8_t x, uint8_t y);
+uint8_t get_object_at(uint8_t x, uint8_t y);
+void flash_facing(void);
+void move_player(uint8_t dx, uint8_t dy);
+void inspecting(void);
+void cheat_mode(void);
+void cheating(void);
+void collecting_diamonds(uint8_t x, uint8_t y);
+uint8_t is_game_over(void);
+void discoverable_dfs(uint8_t x, uint8_t y);
 
 /*
  * initialise the game state, sets up the playing field, visibility
@@ -154,19 +166,17 @@ void move_player(uint8_t dx, uint8_t dy) {
 		if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
 			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE) {
 			
-			playing_field[player_y][player_y] = EMPTY_SQUARE;
+			playing_field[player_x][player_y] = EMPTY_SQUARE;
 			update_square_colour(player_x, player_y, EMPTY_SQUARE);
 
 			player_x += dx;
 			player_y += dy;
 			collecting_diamonds(player_x, player_y);
-			playing_field[player_y][player_y] = PLAYER;
+			playing_field[player_x][player_y] = PLAYER;
 			update_square_colour(player_x, player_y, PLAYER);
-			
-			update_square_colour(facing_x, facing_y, 
-				playing_field[facing_x][facing_y]);
 		}
 	}
+	update_square_colour(facing_x, facing_y, get_object_at(facing_x, facing_y));
 	facing_x = player_x + dx;
 	facing_y = player_y + dy;
 	flash_facing();
@@ -190,6 +200,8 @@ void cheat_mode(void) {
 		move_terminal_cursor(10,10);
 		printf_P(PSTR("Cheat off"));
 	}
+	move_terminal_cursor(10,12);
+	printf_P(PSTR("Diamonds: %d"), diamond_collected);
 }
 
 void cheating(void) {
@@ -205,6 +217,9 @@ void cheating(void) {
 void collecting_diamonds(uint8_t x, uint8_t y) {
 	if (get_object_at(x, y) == DIAMOND) {
 		diamond_collected += 1;
+		playing_field[x][y] = EMPTY_SQUARE;
+		move_terminal_cursor(10,12);
+		printf_P(PSTR("Diamonds: %d"), diamond_collected);
 	}
 }
 
