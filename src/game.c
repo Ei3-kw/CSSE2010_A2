@@ -8,10 +8,12 @@
 
 #include <avr/pgmspace.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "game.h"
 #include "display.h"
 #include "terminalio.h"
+#include "timer0.h"
 
 #define PLAYER_START_X  0;
 #define PLAYER_START_Y  0;
@@ -48,22 +50,13 @@ uint8_t facing_y;
 uint8_t facing_visible;
 uint8_t cheat_on = 0;
 uint8_t diamond_collected = 0;
+uint8_t distance;
+uint8_t flashing_visible = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
 void initialise_game_display(void);
 void initialise_game_state(void);
-void initialise_game(void);
-uint8_t in_bounds(uint8_t x, uint8_t y);
-uint8_t get_object_at(uint8_t x, uint8_t y);
-void flash_facing(void);
-void move_player(uint8_t dx, uint8_t dy);
-void inspecting(void);
-void cheat_mode(void);
-void cheating(void);
-void collecting_diamonds(uint8_t x, uint8_t y);
-uint8_t is_game_over(void);
-void discoverable_dfs(uint8_t x, uint8_t y);
 
 /*
  * initialise the game state, sets up the playing field, visibility
@@ -164,7 +157,8 @@ void move_player(uint8_t dx, uint8_t dy) {
 	// 4: display the player at the new location
 	if (in_bounds(player_x + dx, player_y + dy)) {
 		if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
-			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE) {
+			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE
+			&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
 			
 			playing_field[player_x][player_y] = EMPTY_SQUARE;
 			update_square_colour(player_x, player_y, EMPTY_SQUARE);
@@ -174,7 +168,10 @@ void move_player(uint8_t dx, uint8_t dy) {
 			collecting_diamonds(player_x, player_y);
 			playing_field[player_x][player_y] = PLAYER;
 			update_square_colour(player_x, player_y, PLAYER);
-		}
+			if (calculate_distance() > 4) {
+				PORTC = 0;
+			}
+		} 
 	}
 	update_square_colour(facing_x, facing_y, get_object_at(facing_x, facing_y));
 	facing_x = player_x + dx;
@@ -221,6 +218,31 @@ void collecting_diamonds(uint8_t x, uint8_t y) {
 		move_terminal_cursor(10,12);
 		printf_P(PSTR("Diamonds: %d"), diamond_collected);
 	}
+}
+
+uint8_t calculate_distance(void) {
+	uint8_t x, y;
+	distance = HEIGHT + WIDTH;
+
+	for (x = 0; x < WIDTH; ++x) {
+		for (y = 0; y < HEIGHT; ++y) {
+			if (get_object_at(x, y) == DIAMOND) {
+				if (abs(player_x - x) + abs(player_y - y) < distance) {
+					distance = abs(player_x - x) + abs(player_y - y);
+				}
+			}
+		}
+	}
+	return distance;
+}
+
+void flashing(void) {
+	if (flashing_visible) {
+		PORTC |= (1<<DDD7);
+	} else {
+		PORTC = 0;
+	}
+	flashing_visible = !flashing_visible;
 }
 
 uint8_t is_game_over(void) {

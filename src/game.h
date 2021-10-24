@@ -48,6 +48,19 @@ void move_player(uint8_t dx, uint8_t dy);
 // returns 1 if the game is over, 0 otherwise
 uint8_t is_game_over(void);
 
+void inspecting(void);
+
+void cheat_mode(void);
+
+void cheating(void);
+
+void collecting_diamonds(uint8_t x, uint8_t y);
+
+void cheating(void);
+
+uint8_t calculate_distance(void);
+
+void flashing(void);
 #endif
 
 /*

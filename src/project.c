@@ -58,6 +58,8 @@ void initialise_hardware(void) {
 	
 	init_timer0();
 	
+	DDRC |= (1 << 7);
+
 	// Turn on global interrupts
 	sei();
 }
@@ -69,7 +71,7 @@ void start_screen(void) {
 	printf_P(PSTR("Diamond Miners"));
 	move_terminal_cursor(10,12);
 	printf_P(PSTR("CSSE2010/7201 project by <Jiayi WANG>"));
-	move_terminal_cursor(10,13);
+	move_terminal_cursor(10,14);
 	printf_P(PSTR("Student num: 46822394"));
 	
 	// Output the static start screen and wait for a push button 
@@ -113,16 +115,16 @@ void new_game(void) {
 
 void play_game(void) {
 	
-	uint32_t last_flash_time, current_time;
+	uint32_t last_flash_time, current_time, last_flash;
 	uint8_t btn; //the button pushed
 	
-	last_flash_time = get_current_time();
+	last_flash = last_flash_time = get_current_time();
 	
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("Cheat off"));
 	move_terminal_cursor(10,12);
 	printf_P(PSTR("Diamonds: 0"));
-		
+
 	// We play the game until it's over
 	while(!is_game_over()) {
 
@@ -170,6 +172,24 @@ void play_game(void) {
 			// Update the most recent time the cursor was flashed
 			last_flash_time = current_time;
 		}
+
+		if (calculate_distance() == 4 
+			&& current_time >= last_flash + 1500) {
+			flashing();
+			last_flash = current_time;
+		} else if (calculate_distance() == 3 
+			&& current_time >= last_flash + 1000) {
+			flashing();
+			last_flash = current_time;
+		} else if (calculate_distance() == 2 
+			&& current_time >= last_flash + 500) {
+			flashing();
+			last_flash = current_time;
+		} else if (calculate_distance() == 1 
+			&& current_time >= last_flash + 250) {
+			flashing();
+			last_flash = current_time;
+		} 
 	}
 	// We get here if the game is over.
 }
