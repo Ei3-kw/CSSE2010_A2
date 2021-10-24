@@ -200,7 +200,7 @@ void move_player(uint8_t dx, uint8_t dy) {
 		update_square_colour(player_x, player_y, PLAYER);
 		
 		if (calculate_distance() > 4) {
-			PORTC = 0;
+			PORTC &= ~(1 << DDD7);
 		}
 
 		if (bomb_placed_time != UINT16_MAX 
@@ -285,7 +285,7 @@ void flashing(void) {
 	if (flashing_visible) {
 		PORTC |= (1 << DDD7);
 	} else {
-		PORTC = 0;
+		PORTC &= ~(1 << DDD7);
 	}
 	flashing_visible = !flashing_visible;
 }
@@ -300,8 +300,25 @@ void bombing(void) {
 
 void count_down(void) {
 	bomb_placed_time -= 1;
+
+	for (int i = 0; i < NUM_DIRECTIONS; i++) {
+		uint8_t x = bomb_x + directions[i][0];
+		uint8_t y = bomb_y + directions[i][1];
+
+		if (get_object_at(x, y) == PLAYER) {
+			PORTC |= (1 << DDD6);
+		}
+	}
+
+	if (get_object_at(bomb_x, bomb_y) == PLAYER) {
+		PORTC |= (1 << DDD6);
+	} else {
+		PORTC &= ~(1 << DDD6);
+	}
+
 	if (bomb_placed_time <= 0) {
 		exploding();
+		// exploding_visuals();
 	}
 }
 
@@ -333,6 +350,7 @@ void exploding(void) {
 		game_over = 1;
 		won = 0;
 	}
+	// bomb_x = bomb_y = UINT8_MAX;
 }
 
 void pause(void) {
