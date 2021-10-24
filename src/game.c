@@ -9,6 +9,7 @@
 #include <avr/pgmspace.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "game.h"
 #include "display.h"
@@ -37,7 +38,7 @@ static const uint8_t starting_layout[HEIGHT][WIDTH] =
 			{0, 0, 0, 4, 0, 0, 3, 0, 4, 0, 0, 3, 3, 0, 5, 4} 
 		};
 		
-#define NUM_DIRECTIONS 8
+#define NUM_DIRECTIONS 4
 static const uint8_t directions[NUM_DIRECTIONS][2] = { {0,1}, {0,-1}, {1,0}, {-1,0}};
 
 // variables for the current state of the game
@@ -48,10 +49,15 @@ uint8_t player_y;
 uint8_t facing_x;
 uint8_t facing_y;
 uint8_t facing_visible;
-uint8_t cheat_on = 0;
+bool cheat_on = 0;
 uint8_t diamond_collected = 0;
 uint8_t distance;
 uint8_t flashing_visible = 0;
+uint16_t bomb_placed_time = UINT16_MAX;
+uint8_t bomb_x;
+uint8_t bomb_y;
+bool game_over = 0;
+bool paused = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -168,8 +174,15 @@ void move_player(uint8_t dx, uint8_t dy) {
 			collecting_diamonds(player_x, player_y);
 			playing_field[player_x][player_y] = PLAYER;
 			update_square_colour(player_x, player_y, PLAYER);
+			
 			if (calculate_distance() > 4) {
 				PORTC = 0;
+			}
+
+			if (bomb_placed_time != UINT16_MAX 
+				&& (player_x != bomb_x 
+					|| player_y != bomb_y)) {
+				update_square_colour(bomb_x, bomb_y, BOMB);
 			}
 		} 
 	}
@@ -238,16 +251,71 @@ uint8_t calculate_distance(void) {
 
 void flashing(void) {
 	if (flashing_visible) {
-		PORTC |= (1<<DDD7);
+		PORTC |= (1 << DDD7);
 	} else {
 		PORTC = 0;
 	}
 	flashing_visible = !flashing_visible;
 }
 
-uint8_t is_game_over(void) {
+void bombing(void) {
+	if (bomb_placed_time == UINT16_MAX) {
+		bomb_placed_time = 2000;
+		bomb_x = player_x;
+		bomb_y = player_y;
+	}
+}
+
+void count_down(void) {
+	bomb_placed_time -= 1;
+	if (bomb_placed_time <= 0) {
+		exploding();
+	}
+}
+
+uint32_t get_bomb_placed_time(void) {
+	return bomb_placed_time;
+}
+
+void exploding(void) {
+	bomb_placed_time = UINT16_MAX;
+	update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+
+	for (int i = 0; i < NUM_DIRECTIONS; i++) {
+		uint8_t x = bomb_x + directions[i][0];
+		uint8_t y = bomb_y + directions[i][1];
+
+		if (get_object_at(x, y) == INSPECTED_BREAKABLE 
+			|| get_object_at(x, y) == BREAKABLE) {
+			playing_field[x][y] = EMPTY_SQUARE;
+			update_square_colour(x, y, EMPTY_SQUARE);
+		}
+
+		if (get_object_at(x, y) == PLAYER) {
+			game_over = 1;
+		}
+	}
+
+	if (get_object_at(bomb_x, bomb_y) == PLAYER) {
+		game_over = 1;
+	}
+}
+
+void pause(void) {
+	paused = !paused;
+}
+
+bool game_paused(void) {
+	return paused;
+}
+
+bool is_game_over(void) {
 	// initially the game never ends
-	return 0;
+	return game_over;
+}
+
+void restart(void) {
+	game_over = 0;
 }
 
 /*

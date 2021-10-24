@@ -10,6 +10,7 @@
 #define GAME_H_
 
 #include <inttypes.h>
+#include <stdbool.h>
 
 /*
  * initialise the game, creates the internal game state and updates
@@ -46,7 +47,7 @@ void flash_facing(void);
 void move_player(uint8_t dx, uint8_t dy);
 
 // returns 1 if the game is over, 0 otherwise
-uint8_t is_game_over(void);
+bool is_game_over(void);
 
 void inspecting(void);
 
@@ -61,6 +62,21 @@ void cheating(void);
 uint8_t calculate_distance(void);
 
 void flashing(void);
+
+void bombing(void);
+
+uint32_t get_bomb_placed_time(void);
+
+void count_down(void);
+
+void exploding(void);
+
+void pause(void);
+
+bool game_paused(void);
+
+void restart(void);
+
 #endif
 
 /*

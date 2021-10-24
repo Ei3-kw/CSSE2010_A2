@@ -22,6 +22,7 @@
 #define DIAMOND					5
 #define UNDISCOVERED			6
 #define INSPECTED_BREAKABLE	 	7
+#define BOMB				 	8
 
 // matrix colour definitions
 #define MATRIX_COLOUR_EMPTY				COLOUR_BLACK
@@ -31,6 +32,7 @@
 #define MATRIX_COLOUR_DIAMOND			COLOUR_GREEN
 #define MATRIX_COLOUR_UNDISCOVERED		COLOUR_LIGHT_YELLOW
 #define MATRIX_COLOUR_BREAKABLE_WALL	COLOUR_ORANGE
+#define MATRIX_COLOUR_BOMB				COLOUR_LIGHT_GREEN
 
 /*
  * initialise the display for the playing field

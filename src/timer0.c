@@ -12,6 +12,7 @@
 #include <avr/interrupt.h>
 
 #include "timer0.h"
+#include "game.h"
 
 /* Our internal clock tick count - incremented every 
  * millisecond. Will overflow every ~49 days. */
@@ -76,4 +77,8 @@ uint32_t get_current_time(void) {
 ISR(TIMER0_COMPA_vect) {
 	/* Increment our clock tick count */
 	clockTicks++;
+
+	if (get_bomb_placed_time() <= 2000 && !game_paused()) {
+		count_down();
+	}
 }

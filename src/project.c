@@ -118,7 +118,9 @@ void play_game(void) {
 	uint32_t last_flash_time, current_time, last_flash;
 	uint8_t btn; //the button pushed
 	
+	// if (!game_paused()) {
 	last_flash = last_flash_time = get_current_time();
+	// }
 	
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("Cheat off"));
@@ -128,68 +130,81 @@ void play_game(void) {
 	// We play the game until it's over
 	while(!is_game_over()) {
 
-		// We need to check if any button has been pushed, this will be
-		// NO_BUTTON_PUSHED if no button has been pushed
-		btn = button_pushed();
+		while (!game_paused() && !is_game_over()) {
+			// We need to check if any button has been pushed, this will be
+			// NO_BUTTON_PUSHED if no button has been pushed
+			btn = button_pushed();
+
+			char serial_input = -1;
+			if (serial_input_available()) {
+				serial_input = fgetc(stdin);
+			}
+			
+			if (btn == BUTTON0_PUSHED || serial_input == 'd' || serial_input == 'D') {
+				// If button 0 is pushed, or 'd' is pressed, move right, 
+				// i.e increase x by 1 and leave y the same
+				move_player(1, 0);
+			} else if (btn == BUTTON1_PUSHED || serial_input == 'a' || serial_input == 'A') {
+				// If button 1 is pushed, or 'a' is pressed, move left, 
+				// i.e decrease x by 1 and leave y the same
+				move_player(-1, 0);
+			} else if (btn == BUTTON2_PUSHED || serial_input == 'w' || serial_input == 'W') {
+				// If button 2 is pushed, or 'w' is pressed, move up, 
+				// i.e increase y by 1 and leave x the same
+				move_player(0, 1);
+			} else if (btn == BUTTON3_PUSHED || serial_input == 's' || serial_input == 'S') {
+				// If button 3 is pushed, or 's' is pressed, move right, 
+				// i.e decrease y by 1 and leave x the same
+				move_player(0, -1);
+			}
+
+			if (serial_input == 'e' || serial_input == 'E') {
+				inspecting();
+			}
+
+			if (serial_input == 'c' || serial_input == 'C') {
+				cheat_mode();
+			}
+
+			if (serial_input == ' ') {
+				bombing();
+			}
+
+			if (serial_input == 'p' || serial_input == 'P') {
+				pause();
+			}
+
+			current_time = get_current_time();
+			if (current_time >= last_flash_time + 500) {
+				// 500ms (0.5 second) has passed since the last time we
+				// flashed the cursor, so flash the cursor
+				flash_facing();
+				
+				// Update the most recent time the cursor was flashed
+				last_flash_time = current_time;
+			}
+
+			if ((calculate_distance() == 4 
+				&& current_time >= last_flash + 1500) 
+				|| (calculate_distance() == 3 
+					&& current_time >= last_flash + 1000) 
+				|| (calculate_distance() == 2 
+					&& current_time >= last_flash + 500) 
+				|| (calculate_distance() == 1 
+					&& current_time >= last_flash + 250)) {
+				flashing();
+				last_flash = current_time;
+			}
+		}
 
 		char serial_input = -1;
 		if (serial_input_available()) {
 			serial_input = fgetc(stdin);
 		}
-		
-		if (btn == BUTTON0_PUSHED || serial_input == 'd' || serial_input == 'D') {
-			// If button 0 is pushed, or 'd' is pressed, move right, 
-			// i.e increase x by 1 and leave y the same
-			move_player(1, 0);
-		} else if (btn == BUTTON1_PUSHED || serial_input == 'a' || serial_input == 'A') {
-			// If button 1 is pushed, or 'a' is pressed, move left, 
-			// i.e decrease x by 1 and leave y the same
-			move_player(-1, 0);
-		} else if (btn == BUTTON2_PUSHED || serial_input == 'w' || serial_input == 'W') {
-			// If button 2 is pushed, or 'w' is pressed, move up, 
-			// i.e increase y by 1 and leave x the same
-			move_player(0, 1);
-		} else if (btn == BUTTON3_PUSHED || serial_input == 's' || serial_input == 'S') {
-			// If button 3 is pushed, or 's' is pressed, move right, 
-			// i.e decrease y by 1 and leave x the same
-			move_player(0, -1);
-		}
 
-		if (serial_input == 'e' || serial_input == 'E') {
-			inspecting();
+		if (serial_input == 'p' || serial_input == 'P') {
+			pause();
 		}
-
-		if (serial_input == 'c' || serial_input == 'C') {
-			cheat_mode();
-		}
-
-		current_time = get_current_time();
-		if(current_time >= last_flash_time + 500) {
-			// 500ms (0.5 second) has passed since the last time we
-			// flashed the cursor, so flash the cursor
-			flash_facing();
-			
-			// Update the most recent time the cursor was flashed
-			last_flash_time = current_time;
-		}
-
-		if (calculate_distance() == 4 
-			&& current_time >= last_flash + 1500) {
-			flashing();
-			last_flash = current_time;
-		} else if (calculate_distance() == 3 
-			&& current_time >= last_flash + 1000) {
-			flashing();
-			last_flash = current_time;
-		} else if (calculate_distance() == 2 
-			&& current_time >= last_flash + 500) {
-			flashing();
-			last_flash = current_time;
-		} else if (calculate_distance() == 1 
-			&& current_time >= last_flash + 250) {
-			flashing();
-			last_flash = current_time;
-		} 
 	}
 	// We get here if the game is over.
 }
@@ -204,4 +219,5 @@ void handle_game_over() {
 		; // wait
 	}
 	
+	restart();
 }

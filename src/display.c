@@ -71,6 +71,8 @@ void update_square_colour(uint8_t x, uint8_t y, uint8_t object) {
 		colour = MATRIX_COLOUR_UNDISCOVERED;
 	} else if (object == INSPECTED_BREAKABLE) {
 		colour = MATRIX_COLOUR_BREAKABLE_WALL;
+	} else if (object == BOMB) {
+		colour = MATRIX_COLOUR_BOMB;
 	} else {
 		// anything unexpected (or empty) will be black
 		colour = MATRIX_COLOUR_EMPTY;
