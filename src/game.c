@@ -53,6 +53,11 @@ static const uint8_t next_lv_layout[HEIGHT][WIDTH] =
 #define NUM_DIRECTIONS 4
 static const uint8_t directions[NUM_DIRECTIONS][2] = { {0,1}, {0,-1}, {1,0}, {-1,0}};
 
+#define NUM_VISIONS 20
+static const uint8_t wanda_vision[NUM_VISIONS][2] = {{-2, -1}, {-2, 0}, {-2, 1}, {-1, -2}, 
+	{-1, -1}, {-1, 0}, {-1, 1}, {-1, 2}, {0, -2}, {0, -1}, {0, 1}, {0, 2}, {1, -2}, 
+	{1, -1}, {1, 0}, {1, 1}, {1, 2}, {2, -1}, {2, 0}, {2, 1}};
+
 // variables for the current state of the game
 uint8_t playing_field[WIDTH][HEIGHT]; // what is currently located at each square
 uint8_t visible[WIDTH][HEIGHT]; // whether each square is currently visible
@@ -72,6 +77,7 @@ bool game_over = 0;
 bool paused = 0;
 bool next_lv = 0;
 bool won = 0;
+bool vision_bubble = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -165,7 +171,7 @@ void flash_facing(void) {
 			// we need to flash the facing cursor on
 			update_square_colour(facing_x, facing_y, FACING);
 		}
-		facing_visible = 1 - facing_visible; //alternate between 0 and 1
+		facing_visible = !facing_visible; //alternate between 0 and 1
 	}
 }
 
@@ -185,6 +191,7 @@ void move_player(uint8_t dx, uint8_t dy) {
 	
 		playing_field[player_x][player_y] = EMPTY_SQUARE;
 		update_square_colour(player_x, player_y, EMPTY_SQUARE);
+		wanda(0);
 
 		player_x += dx;
 		player_y += dy;
@@ -201,6 +208,11 @@ void move_player(uint8_t dx, uint8_t dy) {
 				|| player_y != bomb_y)) {
 			update_square_colour(bomb_x, bomb_y, BOMB);
 		}
+
+		if (vision_bubble) {
+			wanda(1);
+		}
+
 	} else {
 		if (player_x + dx == WIDTH) {
 			check_win();
@@ -363,6 +375,32 @@ void check_win(void) {
 
 bool has_won(void) {
 	return won;
+}
+
+bool vision(void) {
+	vision_bubble = !vision_bubble;
+	return vision_bubble;
+}
+
+void wanda(bool vb) {
+	
+	for (int i = 0; i < NUM_VISIONS; i++) {
+		uint8_t x = player_x + wanda_vision[i][0];
+		uint8_t y = player_y + wanda_vision[i][1];
+		
+		if (in_bounds(x, y)) {
+			if (vb) {
+				visible[x][y] = 1;
+				if (x != bomb_x || y != bomb_y) {
+					update_square_colour(x, y, get_object_at(x, y));
+				}
+			} else {
+				if (x > 2 || y > 2) {
+					update_square_colour(x, y, UNDISCOVERED);
+				}
+			}
+		}
+	}
 }
 
 /*

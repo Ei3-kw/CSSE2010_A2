@@ -81,6 +81,10 @@ void check_win(void);
 
 bool has_won(void);
 
+bool vision(void);
+
+void wanda(bool vb);
+
 #endif
 
 /*
