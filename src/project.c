@@ -103,7 +103,6 @@ void start_screen(void) {
 void new_game(void) {
 	// Clear the serial terminal
 	clear_terminal();
-	
 	// Initialise the game and display
 	initialise_game();
 	
@@ -210,14 +209,15 @@ void play_game(void) {
 }
 
 void handle_game_over() {
-	move_terminal_cursor(10,14);
-	printf_P(PSTR("GAME OVER"));
-	move_terminal_cursor(10,15);
-	printf_P(PSTR("Press a button to start again"));
-	
-	while(button_pushed() == NO_BUTTON_PUSHED) {
-		; // wait
+	if (!has_won()) {
+		move_terminal_cursor(10,14);
+		printf_P(PSTR("GAME OVER"));
+		move_terminal_cursor(10,15);
+		printf_P(PSTR("Press a button to start again"));
+		
+		while(button_pushed() == NO_BUTTON_PUSHED) {
+			; // wait
+		}
 	}
-	
 	restart();
 }

@@ -77,6 +77,10 @@ bool game_paused(void);
 
 void restart(void);
 
+void check_win(void);
+
+bool has_won(void);
+
 #endif
 
 /*

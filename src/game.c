@@ -37,6 +37,18 @@ static const uint8_t starting_layout[HEIGHT][WIDTH] =
 			{0, 0, 0, 3, 0, 0, 3, 0, 3, 0, 3, 0, 3, 0, 0, 4},
 			{0, 0, 0, 4, 0, 0, 3, 0, 4, 0, 0, 3, 3, 0, 5, 4} 
 		};
+
+static const uint8_t next_lv_layout[HEIGHT][WIDTH] = 
+		{
+			{4, 4, 0, 5, 0, 4, 0, 0, 4, 0, 4, 4, 0, 3, 4, 4},
+			{3, 4, 0, 4, 4, 4, 4, 4, 3, 0, 0, 4, 0, 0, 4, 4},
+			{0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4},
+			{4, 4, 0, 4, 0, 4, 3, 4, 4, 4, 4, 4, 5, 0, 3, 5},
+			{3, 3, 3, 4, 4, 4, 5, 4, 5, 4, 0, 0, 0, 3, 3, 4},
+			{0, 0, 0, 4, 0, 4, 3, 0, 0, 3, 0, 3, 0, 4, 0, 4},
+			{0, 0, 0, 3, 0, 4, 4, 0, 4, 3, 4, 0, 4, 0, 0, 4},
+			{0, 0, 0, 3, 0, 0, 4, 4, 0, 3, 5, 4, 0, 4, 4, 4}
+		};
 		
 #define NUM_DIRECTIONS 4
 static const uint8_t directions[NUM_DIRECTIONS][2] = { {0,1}, {0,-1}, {1,0}, {-1,0}};
@@ -58,6 +70,8 @@ uint8_t bomb_x;
 uint8_t bomb_y;
 bool game_over = 0;
 bool paused = 0;
+bool next_lv = 0;
+bool won = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -82,7 +96,11 @@ void initialise_game_state(void) {
 			// initialise this square based on the starting layout
 			// the indices here are to ensure the starting layout
 			// could be easily visualised when declared
-			playing_field[x][y] = starting_layout[HEIGHT - 1 - y][x];
+			if (next_lv) {
+				playing_field[x][y] = next_lv_layout[HEIGHT - 1 - y][x];
+			} else {
+				playing_field[x][y] = starting_layout[HEIGHT - 1 - y][x];
+			}
 			// set all squares to start not visible, this will be
 			// updated once the display is initialised as well
 			visible[x][y] = 0;
@@ -161,29 +179,31 @@ void move_player(uint8_t dx, uint8_t dy) {
 	// 3: if the player can move, update the positional knowledge of the player, 
 	//    this will include variables player_x and player_y
 	// 4: display the player at the new location
-	if (in_bounds(player_x + dx, player_y + dy)) {
-		if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
-			&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE
-			&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
-			
-			playing_field[player_x][player_y] = EMPTY_SQUARE;
-			update_square_colour(player_x, player_y, EMPTY_SQUARE);
+	if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
+		&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE
+		&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
+	
+		playing_field[player_x][player_y] = EMPTY_SQUARE;
+		update_square_colour(player_x, player_y, EMPTY_SQUARE);
 
-			player_x += dx;
-			player_y += dy;
-			collecting_diamonds(player_x, player_y);
-			playing_field[player_x][player_y] = PLAYER;
-			update_square_colour(player_x, player_y, PLAYER);
-			
-			if (calculate_distance() > 4) {
-				PORTC = 0;
-			}
+		player_x += dx;
+		player_y += dy;
+		collecting_diamonds(player_x, player_y);
+		playing_field[player_x][player_y] = PLAYER;
+		update_square_colour(player_x, player_y, PLAYER);
+		
+		if (calculate_distance() > 4) {
+			PORTC = 0;
+		}
 
-			if (bomb_placed_time != UINT16_MAX 
-				&& (player_x != bomb_x 
-					|| player_y != bomb_y)) {
-				update_square_colour(bomb_x, bomb_y, BOMB);
-			}
+		if (bomb_placed_time != UINT16_MAX 
+			&& (player_x != bomb_x 
+				|| player_y != bomb_y)) {
+			update_square_colour(bomb_x, bomb_y, BOMB);
+		}
+	} else {
+		if (player_x + dx == WIDTH) {
+			check_win();
 		} 
 	}
 	update_square_colour(facing_x, facing_y, get_object_at(facing_x, facing_y));
@@ -293,11 +313,13 @@ void exploding(void) {
 
 		if (get_object_at(x, y) == PLAYER) {
 			game_over = 1;
+			won = 0;
 		}
 	}
 
 	if (get_object_at(bomb_x, bomb_y) == PLAYER) {
 		game_over = 1;
+		won = 0;
 	}
 }
 
@@ -316,6 +338,31 @@ bool is_game_over(void) {
 
 void restart(void) {
 	game_over = 0;
+	cheat_on = 0;
+	diamond_collected = 0;
+	won = 0;
+}
+
+void check_win(void) {
+	if (get_object_at(15, 4) == PLAYER) {
+		if (next_lv) {
+			if (diamond_collected == 6) {
+				next_lv = !next_lv;
+				game_over = 1;
+				won = 1;
+			}
+		} else {
+			if (diamond_collected == 3) {
+				next_lv = !next_lv;
+				game_over = 1;
+				won = 1;
+			}
+		}
+	}
+}
+
+bool has_won(void) {
+	return won;
 }
 
 /*
