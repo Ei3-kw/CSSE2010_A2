@@ -84,9 +84,5 @@ ISR(TIMER0_COMPA_vect) {
 		if (get_bomb_placed_time() <= 2000) {
 			count_down();
 		}
-
-		if (get_exploding_time() <= 300) {
-			exploding_count_down();
-		}
 	}
 }

@@ -194,7 +194,10 @@ void move_player(uint8_t dx, uint8_t dy) {
 	
 		playing_field[player_x][player_y] = EMPTY_SQUARE;
 		update_square_colour(player_x, player_y, EMPTY_SQUARE);
-		wanda(0);
+		
+		if (vision_bubble) {
+			wanda(0);
+		}
 
 		player_x += dx;
 		player_y += dy;
@@ -203,7 +206,7 @@ void move_player(uint8_t dx, uint8_t dy) {
 		update_square_colour(player_x, player_y, PLAYER);
 		
 		if (calculate_distance() > 4) {
-			PORTC &= ~(1 << DDD7);
+			PORTC &= ~(1 << 7);
 		}
 
 		if (bomb_placed_time != UINT16_MAX 
@@ -347,26 +350,6 @@ uint32_t get_bomb_placed_time(void) {
 
 void exploding(void) {
 	bomb_placed_time = UINT16_MAX;
-	exploding_time = 300;
-	
-	update_square_colour(bomb_x, bomb_y, PLAYER);
-	for (int i = 0; i < NUM_DIRECTIONS; i++) {
-		uint8_t x = bomb_x + directions[i][0];
-		uint8_t y = bomb_y + directions[i][1];
-		update_square_colour(x, y, BOMB_AREA);
-	}
-
-
-	if (exploding_time == 50) {
-		printf_P(PSTR("reached1\n"));
-		for (int i = 0; i < NUM_DIRECTIONS; i++) {
-			uint8_t x = bomb_x + directions[i][0];
-			uint8_t y = bomb_y + directions[i][1];
-			update_square_colour(x, y, get_object_at(x, y));
-		}
-		update_square_colour(bomb_x, bomb_y, FACING);
-	}
-
 
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
@@ -379,6 +362,7 @@ void exploding(void) {
 			|| get_object_at(x, y) == BREAKABLE) {
 			playing_field[x][y] = EMPTY_SQUARE;
 			update_square_colour(x, y, EMPTY_SQUARE);
+			discoverable_dfs(x, y);
 		}
 
 		if (get_object_at(x, y) == PLAYER) {
@@ -393,34 +377,8 @@ void exploding(void) {
 	}
 
 	bomb_x = bomb_y = UINT8_MAX;
-	PORTC &= ~(1 << DDD6);
+	PORTC &= ~(1 << 6);
 }
-
-// void exploding_visual(void) {
-// 	update_square_colour(bomb_x, bomb_y, PLAYER);
-// 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
-// 		uint8_t x = bomb_x + directions[i][0];
-// 		uint8_t y = bomb_y + directions[i][1];
-// 		update_square_colour(x, y, BOMB_AREA);
-// 	}
-
-
-// 	if (exploding_time == 50) {
-// 		printf_P(PSTR("reached1\n"));
-// 		for (int i = 0; i < NUM_DIRECTIONS; i++) {
-// 			uint8_t x = bomb_x + directions[i][0];
-// 			uint8_t y = bomb_y + directions[i][1];
-// 			update_square_colour(x, y, get_object_at(x, y));
-// 		}
-// 		update_square_colour(bomb_x, bomb_y, FACING);
-// 	}
-
-// 	if (exploding_time <= 0) {
-// 		printf_P(PSTR("reached2\n"));
-// 		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
-// 		exploding_time = UINT16_MAX;
-// 	}
-// }
 
 uint16_t get_exploding_time(void) {
 	return exploding_time;

@@ -73,12 +73,6 @@ void flash_bomb(void);
 
 void exploding(void);
 
-void exploding_visual(void);
-
-uint16_t get_exploding_time(void);
-
-void exploding_count_down(void);
-
 void pause(void);
 
 bool game_paused(void);
