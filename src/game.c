@@ -327,6 +327,10 @@ void count_down(void) {
 		PORTC |= (1 << 6);
 	}
 
+	if (bomb_placed_time == 300) {
+		exploding_effect();
+	}
+
 	if (bomb_placed_time == 0) {
 		exploding();
 	}
@@ -355,9 +359,6 @@ void exploding(void) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];
 
-		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
-		exploding_time = UINT16_MAX;
-
 		if (get_object_at(x, y) == INSPECTED_BREAKABLE 
 			|| get_object_at(x, y) == BREAKABLE) {
 			playing_field[x][y] = EMPTY_SQUARE;
@@ -369,24 +370,32 @@ void exploding(void) {
 			game_over = 1;
 			won = 0;
 		}
+
+		if (visible[x][y]) {
+			update_square_colour(x, y, get_object_at(x, y));
+		} else {
+			update_square_colour(x, y, UNDISCOVERED);
+		}
 	}
 
 	if (bomb_x == player_x && bomb_y == player_y) {
 		game_over = 1;
 		won = 0;
+	} else {
+		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
 	}
 
 	bomb_x = bomb_y = UINT8_MAX;
 	PORTC &= ~(1 << 6);
 }
 
-uint16_t get_exploding_time(void) {
-	return exploding_time;
-}
-
-void exploding_count_down(void) {
-
-	exploding_time -= 1;
+void exploding_effect(void) {
+	update_square_colour(bomb_x, bomb_y, PLAYER);
+	for (int i = 0; i < NUM_DIRECTIONS; i++) {
+		uint8_t x = bomb_x + directions[i][0];
+		uint8_t y = bomb_y + directions[i][1];
+		update_square_colour(x, y, BOMB_AREA);
+	}
 }
 
 void pause(void) {

@@ -73,6 +73,8 @@ void flash_bomb(void);
 
 void exploding(void);
 
+void exploding_effect(void);
+
 void pause(void);
 
 bool game_paused(void);
