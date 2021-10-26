@@ -178,8 +178,8 @@ void play_game(void) {
 					hide();
 					wanda(1);
 				} else {
-					seek();
 					wanda(0);
+					seek();
 				}
 			}
 

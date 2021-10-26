@@ -450,8 +450,7 @@ bool vision(void) {
 void hide(void) {
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
-			visible_ref[i][j] = visible[i][j];
-			visible[i][j] = 0;
+			visible_ref[i][j] = 0;
 			update_square_colour(i, j, UNDISCOVERED);
 		}
 	}
@@ -460,7 +459,6 @@ void hide(void) {
 void seek(void) {
 	for (int i = 0; i < WIDTH; i++) {
 		for (int j = 0; j < HEIGHT; j++) {
-			visible[i][j] = visible_ref[i][j];
 			if (visible[i][j]) {
 				update_square_colour(i, j, get_object_at(i, j));
 			}
@@ -476,13 +474,13 @@ void wanda(bool vb) {
 		
 		if (in_bounds(x, y)) {
 			if (vb) {
-				visible[x][y] = 1;
+				visible_ref[x][y] = 1;
 				if (x != bomb_x || y != bomb_y) {
 					update_square_colour(x, y, get_object_at(x, y));
 				}
 			} else {
 				if (x > 2 || y > 2) {
-					visible[x][y] = 0;
+					visible_ref[x][y] = 0;
 					update_square_colour(x, y, UNDISCOVERED);
 				}
 			}
