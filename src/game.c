@@ -72,8 +72,8 @@ uint8_t distance;
 uint8_t flashing_visible = 0;
 bool bomb_visible = 0;
 uint16_t bomb_placed_time = UINT16_MAX;
-uint32_t bomb_placed_system_time;
 uint16_t last_flash_time = 2000;
+uint16_t exploding_time = UINT16_MAX;
 uint8_t bomb_x = UINT8_MAX;
 uint8_t bomb_y = UINT8_MAX;
 bool game_over = 0;
@@ -301,7 +301,6 @@ void bombing(void) {
 		bomb_placed_time = 2000;
 		bomb_x = player_x;
 		bomb_y = player_y;
-		bomb_placed_system_time = get_current_time();
 	}
 }
 
@@ -345,12 +344,8 @@ void flash_bomb(void) {
 }
 
 
-uint16_t get_bomb_placed_time(void) {
+uint32_t get_bomb_placed_time(void) {
 	return bomb_placed_time;
-}
-
-uint32_t get_bomb_placed_system_time(void) {
-	return bomb_placed_system_time;
 }
 
 void exploding(void) {
@@ -360,14 +355,15 @@ void exploding(void) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];
 
+		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+		exploding_time = UINT16_MAX;
+
 		if (get_object_at(x, y) == INSPECTED_BREAKABLE 
 			|| get_object_at(x, y) == BREAKABLE) {
 			playing_field[x][y] = EMPTY_SQUARE;
-			// update_square_colour(x, y, EMPTY_SQUARE);
-			// discoverable_dfs(x, y);
+			update_square_colour(x, y, EMPTY_SQUARE);
+			discoverable_dfs(x, y);
 		}
-
-		update_square_colour(x, y, MATRIX_COLOUR_BOMB_AREA);
 
 		if (get_object_at(x, y) == PLAYER) {
 			game_over = 1;
@@ -380,27 +376,17 @@ void exploding(void) {
 		won = 0;
 	}
 
-	// update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
-	update_square_colour(bomb_x, bomb_y, PLAYER);
-
 	bomb_x = bomb_y = UINT8_MAX;
 	PORTC &= ~(1 << 6);
 }
 
-void effect_remove(void) {
-	for (int i = 0; i < NUM_DIRECTIONS; i++) {
-		uint8_t x = bomb_x + directions[i][0];
-		uint8_t y = bomb_y + directions[i][1];
+uint16_t get_exploding_time(void) {
+	return exploding_time;
+}
 
-		if (get_object_at(x, y) == EMPTY_SQUARE) {
-			update_square_colour(x, y, EMPTY_SQUARE);
-			discoverable_dfs(x, y);
-		}
-	}
+void exploding_count_down(void) {
 
-	if (bomb_x != player_x || bomb_y != player_y) {
-		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
-	}
+	exploding_time -= 1;
 }
 
 void pause(void) {

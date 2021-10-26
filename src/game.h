@@ -65,17 +65,13 @@ void flashing(void);
 
 void bombing(void);
 
-uint16_t get_bomb_placed_time(void);
-
-uint32_t get_bomb_placed_system_time(void);
+uint32_t get_bomb_placed_time(void);
 
 void count_down(void);
 
 void flash_bomb(void);
 
 void exploding(void);
-
-void effect_remove(void);
 
 void pause(void);
 
