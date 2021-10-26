@@ -175,8 +175,10 @@ void play_game(void) {
 
 			if (serial_input == 'f' || serial_input == 'F') {
 				if (vision()) {
+					hide();
 					wanda(1);
 				} else {
+					seek();
 					wanda(0);
 				}
 			}

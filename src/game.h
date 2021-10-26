@@ -87,6 +87,10 @@ bool has_won(void);
 
 bool vision(void);
 
+void hide(void);
+
+void seek(void);
+
 void wanda(bool vb);
 
 #endif

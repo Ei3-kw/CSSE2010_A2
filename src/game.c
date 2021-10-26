@@ -61,6 +61,7 @@ static const int8_t wanda_vision[NUM_VISIONS][2] = {{-2, -1}, {-2, 0}, {-2, 1}, 
 // variables for the current state of the game
 uint8_t playing_field[WIDTH][HEIGHT]; // what is currently located at each square
 uint8_t visible[WIDTH][HEIGHT]; // whether each square is currently visible
+uint8_t visible_ref[WIDTH][HEIGHT];
 uint8_t player_x;
 uint8_t player_y;
 uint8_t facing_x;
@@ -446,6 +447,27 @@ bool vision(void) {
 	return vision_bubble;
 }
 
+void hide(void) {
+	for (int i = 0; i < WIDTH; i++) {
+		for (int j = 0; j < HEIGHT; j++) {
+			visible_ref[i][j] = visible[i][j];
+			visible[i][j] = 0;
+			update_square_colour(i, j, UNDISCOVERED);
+		}
+	}
+}
+
+void seek(void) {
+	for (int i = 0; i < WIDTH; i++) {
+		for (int j = 0; j < HEIGHT; j++) {
+			visible[i][j] = visible_ref[i][j];
+			if (visible[i][j]) {
+				update_square_colour(i, j, get_object_at(i, j));
+			}
+		}
+	}
+}
+
 void wanda(bool vb) {
 	
 	for (int i = 0; i < NUM_VISIONS; i++) {
@@ -460,6 +482,7 @@ void wanda(bool vb) {
 				}
 			} else {
 				if (x > 2 || y > 2) {
+					visible[x][y] = 0;
 					update_square_colour(x, y, UNDISCOVERED);
 				}
 			}
