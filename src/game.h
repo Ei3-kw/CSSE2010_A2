@@ -65,7 +65,7 @@ void flashing(void);
 
 void bombing(void);
 
-uint32_t get_bomb_placed_time(void);
+uint16_t get_bomb_placed_time(void);
 
 void count_down(void);
 

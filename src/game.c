@@ -344,7 +344,7 @@ void flash_bomb(void) {
 }
 
 
-uint32_t get_bomb_placed_time(void) {
+uint16_t get_bomb_placed_time(void) {
 	return bomb_placed_time;
 }
 
