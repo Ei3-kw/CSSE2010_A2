@@ -202,6 +202,10 @@ void play_game(void) {
 				flashing();
 				last_flash = current_time;
 			}
+
+			if (current_time >= get_bomb_placed_system_time() + 2500) {
+				effect_remove();
+			}
 		}
 
 		char serial_input = -1;
