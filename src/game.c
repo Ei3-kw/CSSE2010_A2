@@ -54,7 +54,7 @@ static const uint8_t next_lv_layout[HEIGHT][WIDTH] =
 static const uint8_t directions[NUM_DIRECTIONS][2] = { {0,1}, {0,-1}, {1,0}, {-1,0}};
 
 #define NUM_VISIONS 20
-static const uint8_t wanda_vision[NUM_VISIONS][2] = {{-2, -1}, {-2, 0}, {-2, 1}, {-1, -2}, 
+static const int8_t wanda_vision[NUM_VISIONS][2] = {{-2, -1}, {-2, 0}, {-2, 1}, {-1, -2}, 
 	{-1, -1}, {-1, 0}, {-1, 1}, {-1, 2}, {0, -2}, {0, -1}, {0, 1}, {0, 2}, {1, -2}, 
 	{1, -1}, {1, 0}, {1, 1}, {1, 2}, {2, -1}, {2, 0}, {2, 1}};
 
@@ -70,9 +70,12 @@ bool cheat_on = 0;
 uint8_t diamond_collected = 0;
 uint8_t distance;
 uint8_t flashing_visible = 0;
+bool bomb_visible = 0;
 uint16_t bomb_placed_time = UINT16_MAX;
-uint8_t bomb_x;
-uint8_t bomb_y;
+uint16_t last_flash_time = 2000;
+uint16_t exploding_time = UINT16_MAX;
+uint8_t bomb_x = UINT8_MAX;
+uint8_t bomb_y = UINT8_MAX;
 bool game_over = 0;
 bool paused = 0;
 bool next_lv = 0;
@@ -283,9 +286,9 @@ uint8_t calculate_distance(void) {
 
 void flashing(void) {
 	if (flashing_visible) {
-		PORTC |= (1 << DDD7);
+		PORTC |= (1 << 7);
 	} else {
-		PORTC &= ~(1 << DDD7);
+		PORTC &= ~(1 << 7);
 	}
 	flashing_visible = !flashing_visible;
 }
@@ -301,26 +304,42 @@ void bombing(void) {
 void count_down(void) {
 	bomb_placed_time -= 1;
 
+	if (bomb_placed_time <= last_flash_time - bomb_placed_time/10) {
+		flash_bomb();
+		last_flash_time = bomb_placed_time;
+	}
+
+	PORTC &= ~(1 << 6);
+
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];
 
 		if (get_object_at(x, y) == PLAYER) {
-			PORTC |= (1 << DDD6);
+			PORTC |= (1 << 6);
 		}
 	}
 
-	if (get_object_at(bomb_x, bomb_y) == PLAYER) {
-		PORTC |= (1 << DDD6);
-	} else {
-		PORTC &= ~(1 << DDD6);
+	if (bomb_x == player_x && bomb_y == player_y) {
+		PORTC |= (1 << 6);
 	}
 
-	if (bomb_placed_time <= 0) {
+	if (bomb_placed_time == 0) {
 		exploding();
-		// exploding_visuals();
 	}
 }
+
+void flash_bomb(void) {
+	if (player_x != bomb_x || player_y != bomb_y) {
+		if (bomb_visible) {
+			update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+		} else {
+			update_square_colour(bomb_x, bomb_y, BOMB);
+		}
+	}
+	bomb_visible = !bomb_visible; //alternate between 0 and 1
+}
+
 
 uint32_t get_bomb_placed_time(void) {
 	return bomb_placed_time;
@@ -328,11 +347,33 @@ uint32_t get_bomb_placed_time(void) {
 
 void exploding(void) {
 	bomb_placed_time = UINT16_MAX;
-	update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+	exploding_time = 300;
+	
+	update_square_colour(bomb_x, bomb_y, PLAYER);
+	for (int i = 0; i < NUM_DIRECTIONS; i++) {
+		uint8_t x = bomb_x + directions[i][0];
+		uint8_t y = bomb_y + directions[i][1];
+		update_square_colour(x, y, BOMB_AREA);
+	}
+
+
+	if (exploding_time == 50) {
+		printf_P(PSTR("reached1\n"));
+		for (int i = 0; i < NUM_DIRECTIONS; i++) {
+			uint8_t x = bomb_x + directions[i][0];
+			uint8_t y = bomb_y + directions[i][1];
+			update_square_colour(x, y, get_object_at(x, y));
+		}
+		update_square_colour(bomb_x, bomb_y, FACING);
+	}
+
 
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];
+
+		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+		exploding_time = UINT16_MAX;
 
 		if (get_object_at(x, y) == INSPECTED_BREAKABLE 
 			|| get_object_at(x, y) == BREAKABLE) {
@@ -346,11 +387,48 @@ void exploding(void) {
 		}
 	}
 
-	if (get_object_at(bomb_x, bomb_y) == PLAYER) {
+	if (bomb_x == player_x && bomb_y == player_y) {
 		game_over = 1;
 		won = 0;
 	}
-	// bomb_x = bomb_y = UINT8_MAX;
+
+	bomb_x = bomb_y = UINT8_MAX;
+	PORTC &= ~(1 << DDD6);
+}
+
+// void exploding_visual(void) {
+// 	update_square_colour(bomb_x, bomb_y, PLAYER);
+// 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
+// 		uint8_t x = bomb_x + directions[i][0];
+// 		uint8_t y = bomb_y + directions[i][1];
+// 		update_square_colour(x, y, BOMB_AREA);
+// 	}
+
+
+// 	if (exploding_time == 50) {
+// 		printf_P(PSTR("reached1\n"));
+// 		for (int i = 0; i < NUM_DIRECTIONS; i++) {
+// 			uint8_t x = bomb_x + directions[i][0];
+// 			uint8_t y = bomb_y + directions[i][1];
+// 			update_square_colour(x, y, get_object_at(x, y));
+// 		}
+// 		update_square_colour(bomb_x, bomb_y, FACING);
+// 	}
+
+// 	if (exploding_time <= 0) {
+// 		printf_P(PSTR("reached2\n"));
+// 		update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
+// 		exploding_time = UINT16_MAX;
+// 	}
+// }
+
+uint16_t get_exploding_time(void) {
+	return exploding_time;
+}
+
+void exploding_count_down(void) {
+
+	exploding_time -= 1;
 }
 
 void pause(void) {
@@ -371,6 +449,7 @@ void restart(void) {
 	cheat_on = 0;
 	diamond_collected = 0;
 	won = 0;
+	bomb_x = bomb_y = UINT8_MAX;
 }
 
 void check_win(void) {

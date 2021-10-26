@@ -168,6 +168,10 @@ CMakeFiles/assignment2.dir/src/timer0.c.o: ../src/timer0.c \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/avr/fuse.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/avr/lock.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/avr/interrupt.h \
+  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/avr/pgmspace.h \
+  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stddef.h \
+  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdio.h \
+  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdarg.h \
   ../src/timer0.h \
   ../src/game.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h

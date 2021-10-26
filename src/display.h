@@ -23,6 +23,7 @@
 #define UNDISCOVERED			6
 #define INSPECTED_BREAKABLE	 	7
 #define BOMB				 	8
+#define BOMB_AREA				9
 
 // matrix colour definitions
 #define MATRIX_COLOUR_EMPTY				COLOUR_BLACK
@@ -33,6 +34,7 @@
 #define MATRIX_COLOUR_UNDISCOVERED		COLOUR_LIGHT_YELLOW
 #define MATRIX_COLOUR_BREAKABLE_WALL	COLOUR_ORANGE
 #define MATRIX_COLOUR_BOMB				COLOUR_LIGHT_GREEN
+#define MATRIX_COLOUR_BOMB_AREA			COLOUR_LIGHT_ORANGE
 
 /*
  * initialise the display for the playing field

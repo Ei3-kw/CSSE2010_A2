@@ -10,6 +10,8 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <stdio.h>
 
 #include "timer0.h"
 #include "game.h"
@@ -78,7 +80,13 @@ ISR(TIMER0_COMPA_vect) {
 	/* Increment our clock tick count */
 	clockTicks++;
 
-	if (get_bomb_placed_time() <= 2000 && !game_paused()) {
-		count_down();
+	if (!game_paused()) {
+		if (get_bomb_placed_time() <= 2000) {
+			count_down();
+		}
+
+		if (get_exploding_time() <= 300) {
+			exploding_count_down();
+		}
 	}
 }
