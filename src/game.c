@@ -327,7 +327,7 @@ void count_down(void) {
 		PORTC |= (1 << 6);
 	}
 
-	if (bomb_placed_time == 300) {
+	if (bomb_placed_time <= 300) {
 		exploding_effect();
 	}
 
@@ -390,7 +390,7 @@ void exploding(void) {
 }
 
 void exploding_effect(void) {
-	update_square_colour(bomb_x, bomb_y, PLAYER);
+	// update_square_colour(bomb_x, bomb_y, PLAYER);
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];
