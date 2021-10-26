@@ -85,7 +85,7 @@ ISR(TIMER0_COMPA_vect) {
 			count_down();
 		}
 
-		if (get_exploding_time() <= 300) {
+		if (get_exploding_time() <= 9000) {
 			exploding_count_down();
 		}
 	}
