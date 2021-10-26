@@ -81,16 +81,12 @@ ISR(TIMER0_COMPA_vect) {
 	clockTicks++;
 
 	if (!game_paused()) {
-		if (get_bomb_placed_time() <= 2301) {
+		if (get_bomb_placed_time() <= 2000) {
 			count_down();
 		}
 
-		// if (get_exploding_time() <= 300) {
-		// 	exploding_count_down();
-		// }
-
-		// if (clockTicks % 100 == 0) {
-		// 	printf_P(PSTR("%d\n"), get_exploding_time());
-		// }
+		if (get_exploding_time() <= 300) {
+			exploding_count_down();
+		}
 	}
 }
