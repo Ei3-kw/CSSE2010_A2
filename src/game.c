@@ -387,6 +387,11 @@ void exploding(void) {
 
 	bomb_x = bomb_y = UINT8_MAX;
 	PORTC &= ~(1 << 6);
+
+	if (vision_bubble) {
+		hide();
+		wanda(1);
+	}
 }
 
 void exploding_effect(void) {
@@ -474,11 +479,10 @@ void wanda(bool vb) {
 			if (vb) {
 				if (x != bomb_x || y != bomb_y) {
 					update_square_colour(x, y, get_object_at(x, y));
+					update_square_colour(player_x, player_y, PLAYER);
 				}
 			} else {
-				if (x > 2 || y > 2) {
-					update_square_colour(x, y, UNDISCOVERED);
-				}
+				update_square_colour(x, y, UNDISCOVERED);
 			}
 		}
 	}
