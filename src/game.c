@@ -477,10 +477,8 @@ void wanda(bool vb) {
 		
 		if (in_bounds(x, y)) {
 			if (vb) {
-				if (x != bomb_x || y != bomb_y) {
-					update_square_colour(x, y, get_object_at(x, y));
-					update_square_colour(player_x, player_y, PLAYER);
-				}
+				update_square_colour(x, y, get_object_at(x, y));
+				update_square_colour(player_x, player_y, PLAYER);
 			} else {
 				update_square_colour(x, y, UNDISCOVERED);
 			}
