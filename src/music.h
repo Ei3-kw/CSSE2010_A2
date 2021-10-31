@@ -13,9 +13,11 @@
 
 void bgm(void);
 
-void note_count_down(void);
-
 void bomb_count_down(bool on, uint8_t x);
+
+void bomb_explode(uint8_t stage);
+
+void successful_inspection(uint8_t stage);
 
 void mute(void);
 

@@ -5,13 +5,14 @@
  *
  * Authors: Peter Sutton, Luke Kamols
  * Diamond Miners Inspiration: Daniel Cumming
- * Modified by <YOUR NAME HERE>
+ * Modified by Jiayi WANG
  */ 
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "game.h"
 #include "display.h"
@@ -115,10 +116,16 @@ void new_game(void) {
 
 void play_game(void) {
 	
-	uint32_t last_flash_time, current_time, last_flash;
+	uint32_t last_flash_time, current_time, last_flash, 
+		inspecting_time;
 	uint8_t btn; //the button pushed
+	bool inspected = 0;
 	
 	last_flash = last_flash_time = get_current_time();
+	inspecting_time = UINT32_MAX;
+
+	// FAILED RIPPP
+	// bgm();
 	
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("Cheat off"));
@@ -134,8 +141,6 @@ void play_game(void) {
 			btn = button_pushed();
 
 			char serial_input = -1;
-
-			// bgm();
 
 			if (serial_input_available()) {
 				serial_input = fgetc(stdin);
@@ -161,6 +166,8 @@ void play_game(void) {
 
 			if (serial_input == 'e' || serial_input == 'E') {
 				inspecting();
+				inspected = 1;
+				inspecting_time = get_current_time();
 			}
 
 			if (serial_input == 'c' || serial_input == 'C') {
@@ -210,6 +217,15 @@ void play_game(void) {
 				flashing();
 				last_flash = current_time;
 			}
+
+			if (get_current_time() >= inspecting_time + 363 && inspected 
+				&& get_current_time() < inspecting_time + 726) {
+				successful_inspection(2);
+			} else if (get_current_time() >= inspecting_time + 726 && inspected) {
+				successful_inspection(3);
+				inspected = 0;
+			}
+
 		}
 
 		char serial_input = -1;

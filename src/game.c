@@ -82,6 +82,8 @@ bool paused = 0;
 bool next_lv = 0;
 bool won = 0;
 bool vision_bubble = 0;
+uint8_t steps = 0;
+uint8_t seven_seg_data[10] = {63,6,91,79,102,109,125,7,127,111};
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -192,6 +194,8 @@ void move_player(uint8_t dx, uint8_t dy) {
 	if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
 		&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE
 		&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
+
+		steps += 1;
 	
 		playing_field[player_x][player_y] = EMPTY_SQUARE;
 		update_square_colour(player_x, player_y, EMPTY_SQUARE);
@@ -231,8 +235,18 @@ void move_player(uint8_t dx, uint8_t dy) {
 	flash_facing();
 }
 
+void display_steps(void) {
+	if (steps >= 100) {
+		steps = 99;
+	}
+
+
+}
+
 void inspecting(void) {
-	if (get_object_at(facing_x, facing_y) == BREAKABLE) {
+	if (get_object_at(facing_x, facing_y) == BREAKABLE 
+		|| get_object_at(facing_x, facing_y) == INSPECTED_BREAKABLE) {
+		successful_inspection(1);
 		playing_field[facing_x][facing_y] = INSPECTED_BREAKABLE;
 		update_square_colour(facing_x, facing_y, INSPECTED_BREAKABLE);
 	}
@@ -328,8 +342,14 @@ void count_down(void) {
 		PORTC |= (1 << 6);
 	}
 
+	if (bomb_placed_time <= 500) {
+		bomb_explode(1);
+	}
+
+
 	if (bomb_placed_time <= 300) {
 		exploding_effect();
+		bomb_explode(2);
 	}
 
 	if (bomb_placed_time == 0) {
@@ -357,6 +377,7 @@ uint16_t get_bomb_placed_time(void) {
 
 void exploding(void) {
 	bomb_placed_time = UINT16_MAX;
+	bomb_explode(3);
 	bomb_count_down(0, 0);
 
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {

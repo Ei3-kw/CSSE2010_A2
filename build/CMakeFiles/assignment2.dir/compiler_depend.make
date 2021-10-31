@@ -95,7 +95,9 @@ CMakeFiles/assignment2.dir/src/music.c.o: ../src/music.c \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdarg.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdlib.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h \
-  ../src/music.h
+  ../src/music.h \
+  ../src/game.h \
+  ../src/timer0.h
 
 CMakeFiles/assignment2.dir/src/project.c.o: ../src/project.c \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/avr/io.h \
@@ -114,8 +116,8 @@ CMakeFiles/assignment2.dir/src/project.c.o: ../src/project.c \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stddef.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdio.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdarg.h \
-  ../src/game.h \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h \
+  ../src/game.h \
   ../src/display.h \
   ../src/pixel_colour.h \
   ../src/ledmatrix.h \
@@ -197,7 +199,9 @@ CMakeFiles/assignment2.dir/src/timer0.c.o: ../src/timer0.c \
   /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdarg.h \
   ../src/timer0.h \
   ../src/game.h \
-  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h
+  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h \
+  ../src/music.h \
+  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdlib.h
 
 
 ../src/terminalio.c:

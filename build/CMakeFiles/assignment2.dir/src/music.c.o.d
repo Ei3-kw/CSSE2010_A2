@@ -17,4 +17,6 @@ CMakeFiles/assignment2.dir/src/music.c.o: \
  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdarg.h \
  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdlib.h \
  /usr/local/Cellar/avr-gcc@5/5.5.0/lib/avr-gcc/5/gcc/avr/5.5.0/include/stdbool.h \
- /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.h
+ /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.h \
+ /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/game.h \
+ /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/timer0.h

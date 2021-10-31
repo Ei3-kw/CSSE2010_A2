@@ -15,7 +15,7 @@
 
 #include "timer0.h"
 #include "game.h"
-// #include "music.h"
+#include "music.h"
 
 /* Our internal clock tick count - incremented every 
  * millisecond. Will overflow every ~49 days. */
@@ -82,11 +82,8 @@ ISR(TIMER0_COMPA_vect) {
 	clockTicks++;
 
 	if (!game_paused()) {
-
 		if (get_bomb_placed_time() <= 2000) {
 			count_down();
 		}
-
-		// note_count_down();
 	}
 }
