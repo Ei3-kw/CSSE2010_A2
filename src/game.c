@@ -84,6 +84,8 @@ bool won = 0;
 bool vision_bubble = 0;
 uint8_t steps = 0;
 uint8_t seven_seg_data[10] = {63,6,91,79,102,109,125,7,127,111};
+volatile uint8_t seven_seg_cc = 0;
+volatile uint8_t digits_displayed = 0;
 
 // function prototypes for this file
 void discoverable_dfs(uint8_t x, uint8_t y);
@@ -191,12 +193,12 @@ void move_player(uint8_t dx, uint8_t dy) {
 	// 3: if the player can move, update the positional knowledge of the player, 
 	//    this will include variables player_x and player_y
 	// 4: display the player at the new location
+	// 
 	if (get_object_at(player_x + dx, player_y + dy) != BREAKABLE 
 		&& get_object_at(player_x + dx, player_y + dy) != UNBREAKABLE
 		&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
-
-		steps += 1;
 	
+		steps += 1;
 		playing_field[player_x][player_y] = EMPTY_SQUARE;
 		update_square_colour(player_x, player_y, EMPTY_SQUARE);
 		
@@ -240,7 +242,22 @@ void display_steps(void) {
 		steps = 99;
 	}
 
-
+	DDRA = 0xFF;
+	DDRC = 1<<0;
+	
+	if (steps >= 10) {
+		seven_seg_cc = !seven_seg_cc;
+		if(seven_seg_cc == 0) {
+			PORTA = seven_seg_data[steps%10];
+		} else {
+			PORTA = seven_seg_data[(steps - steps%10)/10];
+		}
+		PORTC = seven_seg_cc;
+	} else {
+		seven_seg_cc = 0;
+		PORTA = seven_seg_data[steps%10];
+		PORTC = seven_seg_cc;
+	}
 }
 
 void inspecting(void) {

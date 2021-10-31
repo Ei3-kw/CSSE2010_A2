@@ -93,6 +93,8 @@ void seek(void);
 
 void wanda(bool vb);
 
+void display_steps(void);
+
 #endif
 
 /*
