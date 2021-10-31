@@ -264,6 +264,30 @@ src/ledmatrix.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment2.dir/build.make CMakeFiles/assignment2.dir/src/ledmatrix.c.s
 .PHONY : src/ledmatrix.c.s
 
+src/music.o: src/music.c.o
+.PHONY : src/music.o
+
+# target to build an object file
+src/music.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment2.dir/build.make CMakeFiles/assignment2.dir/src/music.c.o
+.PHONY : src/music.c.o
+
+src/music.i: src/music.c.i
+.PHONY : src/music.i
+
+# target to preprocess a source file
+src/music.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment2.dir/build.make CMakeFiles/assignment2.dir/src/music.c.i
+.PHONY : src/music.c.i
+
+src/music.s: src/music.c.s
+.PHONY : src/music.s
+
+# target to generate assembly for a file
+src/music.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/assignment2.dir/build.make CMakeFiles/assignment2.dir/src/music.c.s
+.PHONY : src/music.c.s
+
 src/project.o: src/project.c.o
 .PHONY : src/project.o
 
@@ -408,6 +432,9 @@ help:
 	@echo "... src/ledmatrix.o"
 	@echo "... src/ledmatrix.i"
 	@echo "... src/ledmatrix.s"
+	@echo "... src/music.o"
+	@echo "... src/music.i"
+	@echo "... src/music.s"
 	@echo "... src/project.o"
 	@echo "... src/project.i"
 	@echo "... src/project.s"

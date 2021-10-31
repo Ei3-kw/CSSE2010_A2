@@ -125,10 +125,24 @@ CMakeFiles/assignment2.dir/src/ledmatrix.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assignment2.dir/src/ledmatrix.c.s"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/ledmatrix.c -o CMakeFiles/assignment2.dir/src/ledmatrix.c.s
 
+CMakeFiles/assignment2.dir/src/music.c.o: CMakeFiles/assignment2.dir/flags.make
+CMakeFiles/assignment2.dir/src/music.c.o: ../src/music.c
+CMakeFiles/assignment2.dir/src/music.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/assignment2.dir/src/music.c.o"
+	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/music.c.o -MF CMakeFiles/assignment2.dir/src/music.c.o.d -o CMakeFiles/assignment2.dir/src/music.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.c
+
+CMakeFiles/assignment2.dir/src/music.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assignment2.dir/src/music.c.i"
+	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.c > CMakeFiles/assignment2.dir/src/music.c.i
+
+CMakeFiles/assignment2.dir/src/music.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assignment2.dir/src/music.c.s"
+	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.c -o CMakeFiles/assignment2.dir/src/music.c.s
+
 CMakeFiles/assignment2.dir/src/project.c.o: CMakeFiles/assignment2.dir/flags.make
 CMakeFiles/assignment2.dir/src/project.c.o: ../src/project.c
 CMakeFiles/assignment2.dir/src/project.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/assignment2.dir/src/project.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/assignment2.dir/src/project.c.o"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/project.c.o -MF CMakeFiles/assignment2.dir/src/project.c.o.d -o CMakeFiles/assignment2.dir/src/project.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/project.c
 
 CMakeFiles/assignment2.dir/src/project.c.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/assignment2.dir/src/project.c.s: cmake_force
 CMakeFiles/assignment2.dir/src/serialio.c.o: CMakeFiles/assignment2.dir/flags.make
 CMakeFiles/assignment2.dir/src/serialio.c.o: ../src/serialio.c
 CMakeFiles/assignment2.dir/src/serialio.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/assignment2.dir/src/serialio.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/assignment2.dir/src/serialio.c.o"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/serialio.c.o -MF CMakeFiles/assignment2.dir/src/serialio.c.o.d -o CMakeFiles/assignment2.dir/src/serialio.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/serialio.c
 
 CMakeFiles/assignment2.dir/src/serialio.c.i: cmake_force
@@ -156,7 +170,7 @@ CMakeFiles/assignment2.dir/src/serialio.c.s: cmake_force
 CMakeFiles/assignment2.dir/src/spi.c.o: CMakeFiles/assignment2.dir/flags.make
 CMakeFiles/assignment2.dir/src/spi.c.o: ../src/spi.c
 CMakeFiles/assignment2.dir/src/spi.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/assignment2.dir/src/spi.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/assignment2.dir/src/spi.c.o"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/spi.c.o -MF CMakeFiles/assignment2.dir/src/spi.c.o.d -o CMakeFiles/assignment2.dir/src/spi.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/spi.c
 
 CMakeFiles/assignment2.dir/src/spi.c.i: cmake_force
@@ -170,7 +184,7 @@ CMakeFiles/assignment2.dir/src/spi.c.s: cmake_force
 CMakeFiles/assignment2.dir/src/terminalio.c.o: CMakeFiles/assignment2.dir/flags.make
 CMakeFiles/assignment2.dir/src/terminalio.c.o: ../src/terminalio.c
 CMakeFiles/assignment2.dir/src/terminalio.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/assignment2.dir/src/terminalio.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/assignment2.dir/src/terminalio.c.o"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/terminalio.c.o -MF CMakeFiles/assignment2.dir/src/terminalio.c.o.d -o CMakeFiles/assignment2.dir/src/terminalio.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/terminalio.c
 
 CMakeFiles/assignment2.dir/src/terminalio.c.i: cmake_force
@@ -184,7 +198,7 @@ CMakeFiles/assignment2.dir/src/terminalio.c.s: cmake_force
 CMakeFiles/assignment2.dir/src/timer0.c.o: CMakeFiles/assignment2.dir/flags.make
 CMakeFiles/assignment2.dir/src/timer0.c.o: ../src/timer0.c
 CMakeFiles/assignment2.dir/src/timer0.c.o: CMakeFiles/assignment2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/assignment2.dir/src/timer0.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/assignment2.dir/src/timer0.c.o"
 	avr-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/assignment2.dir/src/timer0.c.o -MF CMakeFiles/assignment2.dir/src/timer0.c.o.d -o CMakeFiles/assignment2.dir/src/timer0.c.o -c /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/timer0.c
 
 CMakeFiles/assignment2.dir/src/timer0.c.i: cmake_force
@@ -201,6 +215,7 @@ assignment2_OBJECTS = \
 "CMakeFiles/assignment2.dir/src/display.c.o" \
 "CMakeFiles/assignment2.dir/src/game.c.o" \
 "CMakeFiles/assignment2.dir/src/ledmatrix.c.o" \
+"CMakeFiles/assignment2.dir/src/music.c.o" \
 "CMakeFiles/assignment2.dir/src/project.c.o" \
 "CMakeFiles/assignment2.dir/src/serialio.c.o" \
 "CMakeFiles/assignment2.dir/src/spi.c.o" \
@@ -214,6 +229,7 @@ assignment2.elf: CMakeFiles/assignment2.dir/src/buttons.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/display.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/game.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/ledmatrix.c.o
+assignment2.elf: CMakeFiles/assignment2.dir/src/music.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/project.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/serialio.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/spi.c.o
@@ -221,7 +237,7 @@ assignment2.elf: CMakeFiles/assignment2.dir/src/terminalio.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/src/timer0.c.o
 assignment2.elf: CMakeFiles/assignment2.dir/build.make
 assignment2.elf: CMakeFiles/assignment2.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking C executable assignment2.elf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking C executable assignment2.elf"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/assignment2.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

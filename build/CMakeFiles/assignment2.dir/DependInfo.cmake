@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/display.c" "CMakeFiles/assignment2.dir/src/display.c.o" "gcc" "CMakeFiles/assignment2.dir/src/display.c.o.d"
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/game.c" "CMakeFiles/assignment2.dir/src/game.c.o" "gcc" "CMakeFiles/assignment2.dir/src/game.c.o.d"
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/ledmatrix.c" "CMakeFiles/assignment2.dir/src/ledmatrix.c.o" "gcc" "CMakeFiles/assignment2.dir/src/ledmatrix.c.o.d"
+  "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.c" "CMakeFiles/assignment2.dir/src/music.c.o" "gcc" "CMakeFiles/assignment2.dir/src/music.c.o.d"
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/project.c" "CMakeFiles/assignment2.dir/src/project.c.o" "gcc" "CMakeFiles/assignment2.dir/src/project.c.o.d"
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/serialio.c" "CMakeFiles/assignment2.dir/src/serialio.c.o" "gcc" "CMakeFiles/assignment2.dir/src/serialio.c.o.d"
   "/Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/spi.c" "CMakeFiles/assignment2.dir/src/spi.c.o" "gcc" "CMakeFiles/assignment2.dir/src/spi.c.o.d"

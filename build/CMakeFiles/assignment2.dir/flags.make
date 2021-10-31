@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = 
 
-C_FLAGS =  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk -mmcu=atmega324pa -std=c11 -Os -Wall -Wextra -Wl,--relax,--gc-sections -mcall-prologues
+C_FLAGS = -mmcu=atmega324pa -std=c11 -Os -Wall -Wextra -Wl,--relax,--gc-sections -mcall-prologues
 

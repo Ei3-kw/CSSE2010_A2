@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/assignment2.dir/src/game.c.o.d"
   "CMakeFiles/assignment2.dir/src/ledmatrix.c.o"
   "CMakeFiles/assignment2.dir/src/ledmatrix.c.o.d"
+  "CMakeFiles/assignment2.dir/src/music.c.o"
+  "CMakeFiles/assignment2.dir/src/music.c.o.d"
   "CMakeFiles/assignment2.dir/src/project.c.o"
   "CMakeFiles/assignment2.dir/src/project.c.o.d"
   "CMakeFiles/assignment2.dir/src/serialio.c.o"

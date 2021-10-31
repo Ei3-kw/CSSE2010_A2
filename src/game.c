@@ -15,6 +15,7 @@
 #include "display.h"
 #include "terminalio.h"
 #include "timer0.h"
+#include "music.h"
 
 #define PLAYER_START_X  0;
 #define PLAYER_START_Y  0;
@@ -307,7 +308,7 @@ void bombing(void) {
 void count_down(void) {
 	bomb_placed_time -= 1;
 
-	if (bomb_placed_time <= last_flash_time - bomb_placed_time/10) {
+	if (bomb_placed_time < last_flash_time - bomb_placed_time/10) {
 		flash_bomb();
 		last_flash_time = bomb_placed_time;
 	}
@@ -339,8 +340,10 @@ void count_down(void) {
 void flash_bomb(void) {
 	if (player_x != bomb_x || player_y != bomb_y) {
 		if (bomb_visible) {
+			bomb_count_down(1, last_flash_time/20);
 			update_square_colour(bomb_x, bomb_y, EMPTY_SQUARE);
 		} else {
+			bomb_count_down(0, last_flash_time/20);
 			update_square_colour(bomb_x, bomb_y, BOMB);
 		}
 	}
@@ -354,6 +357,7 @@ uint16_t get_bomb_placed_time(void) {
 
 void exploding(void) {
 	bomb_placed_time = UINT16_MAX;
+	bomb_count_down(0, 0);
 
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
@@ -395,7 +399,6 @@ void exploding(void) {
 }
 
 void exploding_effect(void) {
-	// update_square_colour(bomb_x, bomb_y, PLAYER);
 	for (int i = 0; i < NUM_DIRECTIONS; i++) {
 		uint8_t x = bomb_x + directions[i][0];
 		uint8_t y = bomb_y + directions[i][1];

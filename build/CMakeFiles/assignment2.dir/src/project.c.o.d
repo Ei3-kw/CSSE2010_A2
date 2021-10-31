@@ -25,6 +25,8 @@ CMakeFiles/assignment2.dir/src/project.c.o: \
  /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/serialio.h \
  /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/terminalio.h \
  /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/timer0.h \
+ /Users/ei3/Desktop/UQ/BcS/Y1S2/CSSE2010/Assessment/A2/src/music.h \
+ /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/stdlib.h \
  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/util/delay.h \
  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/util/delay_basic.h \
  /usr/local/Cellar/avr-gcc@5/5.5.0/avr/include/math.h

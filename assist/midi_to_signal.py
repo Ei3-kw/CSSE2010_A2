@@ -17,14 +17,14 @@ def play():
         events.append(message.type == 'note_on')
 
         freq = round(note_to_frequency(message.note))
-        notes.append(freq)
+        notes.append(freq + 12)
 
         time = int(message.time * 1000) # time in ms
         length.append(time)
 
-    xtr = str(tuple(zip(events, notes, length))[56:]).replace('(', '{') \
+    xtr = str(tuple(zip(events, length, notes))[56:]).replace('(', '{') \
         .replace(')', '}').replace('True', '1').replace('False', '0')
-    print(f'static const uint16_t freq_time[{len(messages)//2}][3]{xtr};')
+    print(f'static const uint16_t time_freq[{len(messages)//2}][3] = {xtr};')
 
 
 def note_to_frequency(m):

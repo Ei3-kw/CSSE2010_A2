@@ -3,19 +3,37 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <avr/io.h>
-#define F_CPU 8000000UL	// 8MHz
+#define F_CPU 8000000L	// 8MHz
 #include <stdint.h>
 
-static const uint16_t freq_time[56][3]{
-	{1, 185, 59}, {0, 185, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 297}, 
-	{0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, 
-	{1, 156, 59}, {0, 156, 178}, {1, 156, 59}, {0, 156, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, 
-	{0, 165, 178}, {1, 277, 297}, {0, 277, 178}, {1, 247, 59}, {0, 247, 178}, {1, 208, 59}, {0, 208, 178}, 
-	{1, 185, 59}, {0, 185, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 297}, 
-	{0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, {1, 165, 59}, {0, 165, 178}, 
-	{1, 139, 59}, {0, 139, 178}, {1, 139, 59}, {0, 139, 178}, {1, 123, 59}, {0, 123, 178}, {1, 123, 59}, 
-	{0, 123, 178}, {1, 277, 297}, {0, 277, 178}, {1, 247, 59}, {0, 247, 178}, {1, 208, 59}, {0, 208, 178}
+#include "music.h"
+
+#define NUM_NOTES 56
+static const uint16_t time_freq[56][3] = {
+	{1, 59, 197}, {0, 178, 197}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 297, 177}, 
+	{0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, 
+	{1, 59, 168}, {0, 178, 168}, {1, 59, 168}, {0, 178, 168}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, 
+	{0, 178, 177}, {1, 297, 289}, {0, 178, 289}, {1, 59, 259}, {0, 178, 259}, {1, 59, 220}, {0, 178, 220}, 
+	{1, 59, 197}, {0, 178, 197}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 297, 177}, 
+	{0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, {1, 59, 177}, {0, 178, 177}, 
+	{1, 59, 151}, {0, 178, 151}, {1, 59, 151}, {0, 178, 151}, {1, 59, 135}, {0, 178, 135}, {1, 59, 135}, 
+	{0, 178, 135}, {1, 297, 289}, {0, 178, 289}, {1, 59, 259}, {0, 178, 259}, {1, 59, 220}, {0, 178, 220}
 };
+// static const uint16_t time_freq[NUM_NOTES][3] = {
+// 	{1, 59, 185}, {0, 178, 185}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 297, 165}, 
+// 	{0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, 
+// 	{1, 59, 156}, {0, 178, 156}, {1, 59, 156}, {0, 178, 156}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, 
+// 	{0, 178, 165}, {1, 297, 277}, {0, 178, 277}, {1, 59, 247}, {0, 178, 247}, {1, 59, 208}, {0, 178, 208}, 
+// 	{1, 59, 185}, {0, 178, 185}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 297, 165}, 
+// 	{0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, {1, 59, 165}, {0, 178, 165}, 
+// 	{1, 59, 139}, {0, 178, 139}, {1, 59, 139}, {0, 178, 139}, {1, 59, 123}, {0, 178, 123}, {1, 59, 123}, 
+// 	{0, 178, 123}, {1, 297, 277}, {0, 178, 277}, {1, 59, 247}, {0, 178, 247}, {1, 59, 208}, {0, 178, 208}
+// };
+
+uint16_t event;
+uint16_t duration;
+uint8_t i = 0;
+bool mutee = 0;
 
 uint16_t freq_to_clock_period(uint16_t freq) {
 	return (1000000UL / freq);	// UL makes the constant an unsigned long (32 bits)
@@ -28,26 +46,48 @@ uint16_t duty_cycle_to_pulse_width(float dutycycle, uint16_t clockperiod) {
 	return (dutycycle * clockperiod) / 100;
 }
 
-int main() {
-	uint16_t freq = 0;	// Hz
-	float dutycycle = 2;	// %
-	uint16_t clockperiod = freq_to_clock_period(freq);
-	uint16_t pulsewidth = duty_cycle_to_pulse_width(dutycycle, clockperiod);
+void bgm(void) {
 	
-	// Make pin OC1B be an output
 	DDRD = (1 << 4);
 	
-	// Set the maximum count value for timer/counter 1 to be one less than the clockperiod
-	OCR1A = clockperiod - 1;
-	
-	// Set the count compare value based on the pulse width. The value will be 1 less
-	// than the pulse width - unless the pulse width is 0.
-	OCR1B = 128;
-	
-	// Set up timer/counter 1 for Fast PWM, counting from 0 to the value in OCR1A
-	// before reseting to 0. Count at 1MHz (CLK/8).
-	// Configure output OC1B to be clear on compare match and set on timer/counter
-	// overflow (non-inverting mode).
 	TCCR1A = (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
 	TCCR1B = (1<<WGM13) | (1<<WGM12) | (1<<CS11);
+
+	event = time_freq[i][0];
+	duration = time_freq[i][1];
+	OCR1A = freq_to_clock_period(time_freq[i][2]) - 1;
+	OCR1B = 64;	
+}
+
+void note_count_down(void) {
+	duration -= 1;
+
+	if (duration > 0) {
+		if (!event) {
+			DDRD = 0;
+		}
+	} else {
+		i += 1;
+		if (i == 56) {
+			i = 0;
+		}
+	}
+}
+
+void bomb_count_down(bool on, uint8_t x) {
+	DDRD = (1 << 4);
+	
+	TCCR1A = (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
+	TCCR1B = (1<<WGM13) | (1<<WGM12) | (1<<CS11);
+
+	OCR1A = 440 + x;
+	OCR1B = 64;
+
+	if (!on || mutee) {
+		DDRD = 0;
+	}
+}
+
+void mute(void) {
+	mutee = !mutee;
 }

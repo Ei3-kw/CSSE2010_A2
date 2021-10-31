@@ -20,6 +20,7 @@
 #include "serialio.h"
 #include "terminalio.h"
 #include "timer0.h"
+#include "music.h"
 
 #define F_CPU 8000000L
 #include <util/delay.h>
@@ -117,9 +118,7 @@ void play_game(void) {
 	uint32_t last_flash_time, current_time, last_flash;
 	uint8_t btn; //the button pushed
 	
-	// if (!game_paused()) {
 	last_flash = last_flash_time = get_current_time();
-	// }
 	
 	move_terminal_cursor(10,10);
 	printf_P(PSTR("Cheat off"));
@@ -135,6 +134,9 @@ void play_game(void) {
 			btn = button_pushed();
 
 			char serial_input = -1;
+
+			// bgm();
+
 			if (serial_input_available()) {
 				serial_input = fgetc(stdin);
 			}
@@ -181,6 +183,10 @@ void play_game(void) {
 					wanda(0);
 					seek();
 				}
+			}
+
+			if (serial_input == 'm' || serial_input == 'M') {
+				mute();
 			}
 
 			current_time = get_current_time();
