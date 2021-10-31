@@ -81,6 +81,8 @@ ISR(TIMER0_COMPA_vect) {
 	/* Increment our clock tick count */
 	clockTicks++;
 
+	display_steps();
+
 	if (!game_paused()) {
 		if (get_bomb_placed_time() <= 2000) {
 			count_down();

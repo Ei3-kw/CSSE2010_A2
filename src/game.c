@@ -199,6 +199,7 @@ void move_player(uint8_t dx, uint8_t dy) {
 		&& get_object_at(player_x + dx, player_y + dy) != INSPECTED_BREAKABLE) {
 	
 		steps += 1;
+
 		playing_field[player_x][player_y] = EMPTY_SQUARE;
 		update_square_colour(player_x, player_y, EMPTY_SQUARE);
 		
@@ -243,7 +244,7 @@ void display_steps(void) {
 	}
 
 	DDRA = 0xFF;
-	DDRC = 1<<0;
+	DDRC |= (1 << 0);
 	
 	if (steps >= 10) {
 		seven_seg_cc = !seven_seg_cc;
@@ -252,11 +253,15 @@ void display_steps(void) {
 		} else {
 			PORTA = seven_seg_data[(steps - steps%10)/10];
 		}
-		PORTC = seven_seg_cc;
+		if (seven_seg_cc) {
+			PORTC |= (1 << 0);
+		} else {
+			PORTC &= ~(1 << 0);
+		}
+		
 	} else {
 		seven_seg_cc = 0;
 		PORTA = seven_seg_data[steps%10];
-		PORTC = seven_seg_cc;
 	}
 }
 
@@ -463,6 +468,7 @@ void restart(void) {
 	diamond_collected = 0;
 	won = 0;
 	bomb_x = bomb_y = UINT8_MAX;
+	steps = 0;
 }
 
 void check_win(void) {

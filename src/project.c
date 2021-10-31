@@ -134,14 +134,12 @@ void play_game(void) {
 
 	// We play the game until it's over
 	while(!is_game_over()) {
-		
-		display_steps();
 
 		while (!game_paused() && !is_game_over()) {
 			// We need to check if any button has been pushed, this will be
 			// NO_BUTTON_PUSHED if no button has been pushed
 			btn = button_pushed();
-			display_steps();
+
 			char serial_input = -1;
 
 			if (serial_input_available()) {
