@@ -74,9 +74,6 @@ void bomb_count_down(bool on, uint8_t x) {
 
 	if (!on || muted) {
 		DDRD = 0;
-		OCR1B = 0;
-		TCCR1A = 0;
-		TCCR1B = 0;
 	}
 }
 
@@ -91,16 +88,11 @@ void successful_inspection(uint8_t stage) {
 		} else if (stage == 3) {
 			DDRD = 0;
 			OCR1B = 0;
-			TCCR1A = 0;
-			TCCR1B = 0;
 		}
 	} else {
 		DDRD = 0;
 		OCR1B = 0;
-		TCCR1A = 0;
-		TCCR1B = 0;
 	}
-
 	TCCR1A = (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
 	TCCR1B = (1<<WGM13) | (1<<WGM12) | (1<<CS11);
 
@@ -121,8 +113,6 @@ void bomb_explode(uint8_t stage) {
 	} else {
 		DDRD = 0;
 		OCR1B = 0;
-		TCCR1A = 0;
-		TCCR1B = 0;
 	}
 	
 	TCCR1A = (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
